@@ -1,4 +1,4 @@
-FROM node:14
+FROM public.ecr.aws/docker/library/node:14
 
 # Setting working directory. All the path will be relative to WORKDIR
 WORKDIR /usr/src/app
