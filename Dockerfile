@@ -9,6 +9,6 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     mercurial \
     reprepro \
-    ruby1.9.1 \
-    ruby1.9.1-dev \
+    ruby \
+    ruby-dev \
  && rm -rf /var/lib/apt/lists/*
