@@ -11,5 +11,4 @@ RUN apt-get update && apt-get install -y \
     reprepro \
     ruby1.9.1 \
     ruby1.9.1-dev \
-    s3cmd=1.1.* \
  && rm -rf /var/lib/apt/lists/*
