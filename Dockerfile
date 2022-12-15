@@ -1,7 +1,7 @@
 
 
 # syntax=docker/dockerfile:1
-FROM public.ecr.aws/docker/library/golang:1.16-alpine AS build
+FROM public.ecr.aws/docker/library/golang:1.17-alpine AS build
 
 # Install tools required for project
 # Run `docker build --no-cache .` to update dependencies
