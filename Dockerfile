@@ -1,19 +1,27 @@
-FROM public.ecr.aws/docker/library/node:14
 
-# Setting working directory. All the path will be relative to WORKDIR
-WORKDIR /usr/src/app
-RUN apt-get update
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-#COPY package*.json ./
 
-#RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+# syntax=docker/dockerfile:1
+FROM public.ecr.aws/docker/library/golang:1.16-alpine AS build
 
-# Bundle app source
-#COPY . .
+# Install tools required for project
+# Run `docker build --no-cache .` to update dependencies
+RUN apk add --no-cache git
+RUN go get github.com/golang/dep/cmd/dep
 
-#EXPOSE 3000
-#CMD [ "node", "index.js" ]
+# List project dependencies with Gopkg.toml and Gopkg.lock
+# These layers are only re-built when Gopkg files are updated
+COPY Gopkg.lock Gopkg.toml /go/src/project/
+WORKDIR /go/src/project/
+# Install library dependencies
+RUN dep ensure -vendor-only
+
+# Copy the entire project and build it
+# This layer is rebuilt when a file changes in the project directory
+COPY . /go/src/project/
+RUN go build -o /bin/project
+
+# This results in a single layer image
+FROM public.ecr.aws/docker/library/scratch
+COPY --from=build /bin/project /bin/project
+ENTRYPOINT ["/bin/project"]
+CMD ["--help"]
